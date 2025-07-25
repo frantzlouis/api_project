@@ -22,16 +22,16 @@ jobs:
       run: |
         TIMEOUT=60
         until docker compose ps api | grep -q "Up"; do
-          echo "⏳ Esperando que el contenedor API esté arriba..."
+          echo "Esperando que el contenedor API esté funcionando"
           sleep 2
           TIMEOUT=$((TIMEOUT - 2))
           if [ $TIMEOUT -le 0 ]; then
-            echo "❌ Timeout: el contenedor API no arrancó a tiempo"
+            echo "!!Timeout: el contenedor API no arrancó a tiempo"
             docker compose logs api
             exit 1
           fi
         done
-        echo "✅ Contenedor API está activo"
+        echo "EUREKA!! Contenedor API está activo"
 
     - name: Run tests inside API container
       run: |
