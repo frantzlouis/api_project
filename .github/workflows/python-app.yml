@@ -19,11 +19,11 @@ jobs:
       with:
         python-version: '3.10'
 
-    - name: Build and run all services
+    - name: Build and start services
       run: |
-        docker-compose up -d --build
-        echo "Esperando que la API esté disponible..."
-        sleep 30  # esperar para asegurar que la API arranque
+        docker compose up -d --build
+        echo "⏳ Esperando 30s que la API arranque..."
+        sleep 30
 
     - name: Install test dependencies
       run: |
@@ -33,6 +33,6 @@ jobs:
       run: |
         pytest tests/
 
-    - name: Shutdown
+    - name: Tear down services
       if: always()
-      run: docker-compose down
+      run: docker compose down
