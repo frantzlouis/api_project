@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: example
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - postgres
+
+  centos:
+    build:
+      context: ./data_ingestion
+      dockerfile: Dockerfile.ingest
+    depends_on:
+      - db
+    networks:
+      - postgres
+
+  api:
+    build: ./api
+    depends_on:
+      - db
+    ports:
+      - "8000:8000"
+    networks:
+      - postgres
+
+volumes:
+  pgdata:
+
+networks:
+  postgres:
+    driver: bridge
