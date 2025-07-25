@@ -29,9 +29,13 @@ jobs:
       run: |
         pip install pytest requests
 
-    - name: Run tests
+    ##- name: Run tests
+    ##  run: |
+    ##    pytest tests/
+
+    - name: Run tests inside API container
       run: |
-        pytest tests/
+        docker compose exec api pytest tests/
 
     - name: Tear down services
       if: always()

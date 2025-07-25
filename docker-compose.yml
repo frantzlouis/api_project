@@ -23,12 +23,23 @@ services:
     networks:
       - postgres
 
+  ##api:
+  ##  build: ./api
+  ##  depends_on:
+  ##    - db
+  ##  ports:
+  ##    - "8000:8000"
+  ##  networks:
+  ##    - postgres
+
   api:
     build: ./api
     depends_on:
       - db
     ports:
       - "8000:8000"
+    volumes:
+      - ./tests:/app/tests
     networks:
       - postgres
 
