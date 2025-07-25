@@ -1,11 +1,9 @@
-FROM centos:7
-
-RUN yum install -y python3 python3-pip && \
-    pip3 install pandas psycopg2-binary
-
-COPY sample.csv /app/sample.csv
-COPY ingest_data.py /app/ingest_data.py
+FROM python:3.10-slim
 
 WORKDIR /app
 
-CMD ["python3", "ingest_data.py"]
+COPY sample.csv ingest_data.py ./
+
+RUN pip install --no-cache-dir pandas psycopg2-binary
+
+CMD ["python", "ingest_data.py"]
