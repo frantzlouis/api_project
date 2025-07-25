@@ -11,27 +11,27 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout repo
+    - name: Checkout repository
       uses: actions/checkout@v2
 
-    - name: Set up Python
-      uses: actions/setup-python@v2
-      with:
-        python-version: '3.10'
-
-    - name: Build and start services
+    - name: Build and start all services
       run: |
         docker compose up -d --build
-        echo "⏳ Esperando 30s que la API arranque..."
-        sleep 30
 
-    - name: Install test dependencies
+    - name: Wait for API container to be ready
       run: |
-        pip install pytest requests
-
-    ##- name: Run tests
-    ##  run: |
-    ##    pytest tests/
+        TIMEOUT=60
+        until docker compose ps api | grep -q "Up"; do
+          echo "⏳ Esperando que el contenedor API esté arriba..."
+          sleep 2
+          TIMEOUT=$((TIMEOUT - 2))
+          if [ $TIMEOUT -le 0 ]; then
+            echo "❌ Timeout: el contenedor API no arrancó a tiempo"
+            docker compose logs api
+            exit 1
+          fi
+        done
+        echo "✅ Contenedor API está activo"
 
     - name: Run tests inside API container
       run: |
